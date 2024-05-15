@@ -28,11 +28,16 @@ async function typeEmailAndClickNext(page, email) {
 }
 
 async function typePasswordAndSubmit(page, password) {
-  await typeInInput(page, "#i0118", password);
-  await page.waitForTimeout(2000);
-  await submitForm(page);
-  const yesBtn = await waitForSelector(page, "#idSIButton9");
-  await yesBtn.click();
+  try {
+    await typeInInput(page, "#i0118", password);
+    await page.waitForTimeout(2000);
+    await submitForm(page);
+    await page.waitForTimeout(1000);
+    const noBtn = await waitForSelector(page, "#idBtn_Back");
+    noBtn && (await noBtn.click());
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function clickSchoology(page) {

@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function DisplayGrades() {
+export default function DisplayGrades(props) {
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -19,8 +19,7 @@ export default function DisplayGrades() {
       </CardHeader>
       <CardContent>
         <section className="p-2 border border-gray-700 rounded">
-          Alg I 92% Art 1 99% Business 83% Citizenship 91% English I 91% Phy Sci
-          94% World His 93%
+          {props.studentGrades}
         </section>
       </CardContent>
       <CardFooter className="flex justify-between">

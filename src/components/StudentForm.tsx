@@ -14,7 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { run } from "../../actions/collect-grades";
-import { ReactEventHandler } from "react";
+import DisplayGrades from "./DisplayGrades";
+import { useState } from "react";
 
 const formSchema = zod.object({
   email: zod.string().email(),
@@ -30,12 +31,13 @@ export default function StudentForm() {
     },
   });
 
+  const [studentGrades, setStudentGrades] = useState("");
   const handleSubmit = async () => {
     const email = form.getValues().email;
     const password = form.getValues().password;
     const collectedGrades = await run(email, password);
     const formattedGrades = formatGrades(collectedGrades);
-    console.log(formattedGrades);
+    setStudentGrades(formattedGrades);
   };
 
   function formatGrades(grades: any): string {
@@ -44,46 +46,49 @@ export default function StudentForm() {
       .join(" ");
   }
   return (
-    <Form {...form}>
-      <form
-        // action={run}
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="max-w-md w-full flex flex-col gap-4"
-      >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Student Email Address</FormLabel>
-                <FormControl>
-                  <Input {...field} placeholder="Email" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
+    <>
+      <Form {...form}>
+        <form
+          // action={run}
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="max-w-md w-full flex flex-col gap-4"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Student Email Address</FormLabel>
+                  <FormControl>
+                    <Input {...field} placeholder="Email" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => {
-            return (
-              <FormItem>
-                <FormLabel>Student Password</FormLabel>
-                <FormControl>
-                  <Input {...field} type="password" placeholder="Password" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            );
-          }}
-        />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>Student Password</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="password" placeholder="Password" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
 
-        <Button>Fetch Grades</Button>
-      </form>
-    </Form>
+          <Button>Fetch Grades</Button>
+        </form>
+      </Form>
+      <DisplayGrades studentGrades={studentGrades} />
+    </>
   );
 }
