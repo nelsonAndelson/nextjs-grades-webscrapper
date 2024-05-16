@@ -10,7 +10,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function DisplayGrades(props) {
+export default function DisplayGrades(props: any) {
+  console.log(props);
+
   return (
     <Card className="w-[350px]">
       <CardHeader>
