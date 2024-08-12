@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, WithId } from "mongodb";
 
 const uri: string = process.env.MONGODB_URI;
 const dbName: string = "student-grades";
@@ -21,7 +21,7 @@ export const connnectToDatabase = async () => {
 
     return { client, db };
   } catch (error) {
-    console.error("Error occured:" + error);
+    console.error("DB Error occured: " + error);
   }
 };
 
@@ -29,19 +29,29 @@ export async function addGradeToDatabase(
   gradesObject: {},
   firstName: string,
   lastName: string,
-  email: string,
-): Promise<void> {
+  email: string
+): Promise<WithId<any>> {
+  // Todo:Make type for object returned from db
   console.log(gradesObject, firstName, lastName, email);
 
   try {
-    const { db } = await connnectToDatabase();
-    // console.log(gradesObject);
-
     if (!gradesObject) {
       throw new Error("Invalid grades data.");
     }
 
+    const result = await connnectToDatabase();
+
+    if (!result) {
+      throw new Error("Could not connect to DB");
+    }
+
+    const { db } = result;
+    // const { db } = await connnectToDatabase();
+
+    // console.log(gradesObject);
+
     const data: any = {
+      // TODO: fix types
       firstName,
       lastName,
       gradesObject,
@@ -59,7 +69,6 @@ export async function addGradeToDatabase(
       },
       { upsert: true }
     );
-    console.log("response");
     return response;
   } catch (error) {
     console.log("Error occured while adding to db" + error);
