@@ -14,8 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { run } from "../../actions/collect-grades";
-import DisplayGrades from "./DisplayGrades";
-import { useState } from "react";
+import { setStudentGrades } from "@/redux/slices/studentGradesSlice";
+import { useDispatch } from "react-redux";
+import { StudentGradesType } from "@/types/student-grades/studentGradesTypes";
 
 const formSchema = zod.object({
   email: zod.string().email(),
@@ -31,16 +32,18 @@ export default function StudentForm() {
     },
   });
 
-  const [studentGrades, setStudentGrades] = useState("");
+  // const [studentGrades, setStudentGrades] = useState("");
+  const dispatch = useDispatch();
+
   const handleSubmit = async () => {
     const email = form.getValues().email;
     const password = form.getValues().password;
     const collectedGrades = await run(email, password);
-    const formattedGrades = formatGrades(collectedGrades);
-    setStudentGrades(formattedGrades);
+    const formattedGrades = formatGrades(collectedGrades as StudentGradesType);
+    dispatch(setStudentGrades(formattedGrades as string));
   };
 
-  function formatGrades(grades: any): string {
+  function formatGrades(grades: StudentGradesType): string {
     return Object.entries(grades)
       .map(([subject, grade]) => `${subject.replace(" - Honors", "")} ${grade}`)
       .join(" ");
@@ -49,7 +52,7 @@ export default function StudentForm() {
     <>
       <Form {...form}>
         <form
-          // action={run}
+          action={run} /* TODO: fix type */
           onSubmit={form.handleSubmit(handleSubmit)}
           className="max-w-md w-full flex flex-col gap-4"
         >
@@ -88,7 +91,6 @@ export default function StudentForm() {
           <Button>Fetch Grades</Button>
         </form>
       </Form>
-      <DisplayGrades studentGrades={studentGrades} />
     </>
   );
 }

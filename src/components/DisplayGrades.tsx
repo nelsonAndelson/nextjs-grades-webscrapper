@@ -9,10 +9,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useSelector } from "react-redux";
 
-export default function DisplayGrades(props: any) {
-  console.log(props);
+export default function DisplayGrades() {
+  const studentGrades = useSelector(
+    (state: any) => state.studentGrades.studentGrades
+  );
 
+  console.log(studentGrades);
   return (
     <Card className="w-[350px]">
       <CardHeader>
@@ -21,7 +25,7 @@ export default function DisplayGrades(props: any) {
       </CardHeader>
       <CardContent>
         <section className="p-2 border border-gray-700 rounded">
-          {props.studentGrades}
+          {studentGrades}
         </section>
       </CardContent>
       <CardFooter className="flex justify-between">
