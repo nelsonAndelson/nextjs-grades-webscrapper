@@ -21,7 +21,7 @@ A web application built with Next.js that scrapes grades from Schoology and stor
 - Clone the repository: git clone https://github.com/your-username/grades-web-scraper.git
 - Install dependencies: npm install
 - Create a .env file with your MongoDB URI and Schoology account credentials
-- Start the development server: npm run dev
+- Start the development server: ``` npm run dev ```
 
 ## Usage
 
