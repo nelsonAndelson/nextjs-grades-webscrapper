@@ -1,4 +1,5 @@
 import { Db, MongoClient, WithId } from "mongodb";
+import { date } from "zod";
 
 const uri: string = process.env.MONGODB_URI;
 const dbName: string = "student-grades";
@@ -29,7 +30,8 @@ export async function addGradeToDatabase(
   gradesObject: {},
   firstName: string,
   lastName: string,
-  email: string
+  email: string,
+  dateAdded: Date
 ): Promise<WithId<any>> {
   // Todo:Make type for object returned from db
   console.log(gradesObject, firstName, lastName, email);
@@ -64,6 +66,7 @@ export async function addGradeToDatabase(
           firstName: firstName,
           lastName: lastName,
           email: email,
+          dateAdded: new Date(),
           gradesObject: gradesObject,
         },
       },
