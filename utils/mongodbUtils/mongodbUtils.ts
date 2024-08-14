@@ -25,7 +25,7 @@ export const connnectToDatabase = async () => {
   }
 };
 
-export async function addGradeToDatabase(
+export async function addToDbAndReturnProfile(
   gradesObject: {},
   firstName: string,
   lastName: string,
@@ -69,6 +69,7 @@ export async function addGradeToDatabase(
       },
       { upsert: true }
     );
+
     return response;
   } catch (error) {
     console.log("Error occured while adding to db" + error);

@@ -5,7 +5,7 @@ import {
   clickSchoology,
 } from "../utils/puppeteerUtils/puppeteerActionUtils";
 import { collectGrades } from "../utils/puppeteerUtils/dataScrapeUtils";
-import { addGradeToDatabase } from "../utils/mongodbUtils/mongodbUtils";
+import { addToDbAndReturnProfile } from "../utils/mongodbUtils/mongodbUtils";
 
 //S25925ss
 
@@ -20,13 +20,15 @@ export async function run(email: string, password: string) {
     await clickSchoology(page);
     const collectedGrades = await collectGrades(page);
 
-    const res = await addGradeToDatabase(
-      collectedGrades,
+    const res = await addToDbAndReturnProfile(
+      collectedGrades, // TODO: fix type
       firstName,
       lastName,
       email
     );
-    return collectedGrades;
+
+    return res;
+    // return collectedGrades;
   } catch (error) {
     console.error("An error occurred:", error);
   } finally {

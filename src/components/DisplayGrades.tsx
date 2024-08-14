@@ -16,22 +16,27 @@ export default function DisplayGrades() {
     (state: any) => state.studentGrades.studentGrades
   );
 
-  console.log(studentGrades);
+  const studentProfile = useSelector(
+    (state: any) => state.studentProfile.studentProfile
+  );
+
+  console.log("studentProfile", studentProfile);
   return (
-    <Card className="w-[350px]">
-      <CardHeader>
-        <CardTitle>Zakaria Mayada</CardTitle>
-        <CardDescription>Grade: 11th | I don't know</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <section className="p-2 border border-gray-700 rounded">
-          {studentGrades}
-        </section>
-      </CardContent>
-      <CardFooter className="flex justify-between">
-        <Button variant="outline">Add to spreadsheet</Button>
-        <Button>Copy</Button>
-      </CardFooter>
-    </Card>
+    <></>
+    // <Card className={`w-[350px] ${studentGrades ? "" : "hidden"}`}>
+    //   <CardHeader>
+    //     <CardTitle>Zakaria Mayada</CardTitle>
+    //     <CardDescription>Grade: 11th | I don't know</CardDescription>
+    //   </CardHeader>
+    //   <CardContent>
+    //     <section className="p-2 border border-gray-700 rounded">
+    //       {studentGrades}
+    //     </section>
+    //   </CardContent>
+    //   <CardFooter className="flex justify-between">
+    //     <Button variant="outline">Add to spreadsheet</Button>
+    //     <Button>Copy</Button>
+    //   </CardFooter>
+    // </Card>
   );
 }

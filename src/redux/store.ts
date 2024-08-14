@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import studentGradesReducer from "./slices/studentGradesSlice";
+import studentProfileReducer from "./slices/studentProfileSlice";
 
 const store = configureStore({
   reducer: {
     studentGrades: studentGradesReducer,
+    studentProfile: studentProfileReducer,
   },
 });
 

@@ -38,9 +38,12 @@ export default function StudentForm() {
   const handleSubmit = async () => {
     const email = form.getValues().email;
     const password = form.getValues().password;
-    const collectedGrades = await run(email, password);
-    const formattedGrades = formatGrades(collectedGrades as StudentGradesType);
-    dispatch(setStudentGrades(formattedGrades as string));
+    // const collectedGrades = await run(email, password);
+    // const formattedGrades = formatGrades(collectedGrades as StudentGradesType);
+    // dispatch(setStudentGrades(formattedGrades as string));
+    const studentProfile = await run(email, password);
+    dispatch(setStudentGrades(studentProfile));
+    console.log(studentProfile);
   };
 
   function formatGrades(grades: StudentGradesType): string {
