@@ -17,6 +17,7 @@ import { run } from "../../actions/collect-grades";
 import { setStudentGrades } from "@/redux/slices/studentGradesSlice";
 import { useDispatch } from "react-redux";
 import { StudentGradesType } from "@/types/student-grades/studentGradesTypes";
+import { setStudentProfile } from "@/redux/slices/studentProfileSlice";
 
 const formSchema = zod.object({
   email: zod.string().email(),
@@ -42,8 +43,7 @@ export default function StudentForm() {
     // const formattedGrades = formatGrades(collectedGrades as StudentGradesType);
     // dispatch(setStudentGrades(formattedGrades as string));
     const studentProfile = await run(email, password);
-    dispatch(setStudentGrades(studentProfile));
-    console.log(studentProfile);
+    dispatch(setStudentProfile(studentProfile as any));
   };
 
   function formatGrades(grades: StudentGradesType): string {
@@ -57,7 +57,7 @@ export default function StudentForm() {
         <form
           action={run} /* TODO: fix type */
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="max-w-md w-full flex flex-col gap-4"
+          className="max-w-md w-full flex flex-col gap-4 "
         >
           <FormField
             control={form.control}

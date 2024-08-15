@@ -30,8 +30,7 @@ export async function addToDbAndReturnProfile(
   gradesObject: {},
   firstName: string,
   lastName: string,
-  email: string,
-  dateAdded: Date
+  email: string
 ): Promise<WithId<any>> {
   // Todo:Make type for object returned from db
   console.log(gradesObject, firstName, lastName, email);
@@ -66,11 +65,21 @@ export async function addToDbAndReturnProfile(
           firstName: firstName,
           lastName: lastName,
           email: email,
-          dateAdded: new Date(),
+          dateAdded: new Date().toISOString(),
           gradesObject: gradesObject,
         },
       },
-      { upsert: true }
+      {
+        upsert: true,
+        projection: {
+          _id: { $toString: "$_id" },
+          firstName: 1,
+          lastName: 1,
+          email: 1,
+          gradesObject: 1,
+          dateAdded: 1,
+        },
+      }
     );
 
     return response;

@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: any = {
   // TODO: fix type
-  studentProfile: [],
+  studentProfile: null,
 };
 
 //Fix type on reducers
