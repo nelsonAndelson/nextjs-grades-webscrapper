@@ -14,10 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { run } from "../../actions/collect-grades";
-import { setStudentGrades } from "@/redux/slices/studentGradesSlice";
 import { useDispatch } from "react-redux";
-import { StudentGradesType } from "@/types/student-grades/studentGradesTypes";
 import { setStudentProfile } from "@/redux/slices/studentProfileSlice";
+import { useState } from "react";
 
 const formSchema = zod.object({
   email: zod.string().email(),
@@ -33,24 +32,25 @@ export default function StudentForm() {
     },
   });
 
-  // const [studentGrades, setStudentGrades] = useState("");
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
+    setLoading(true);
     const email = form.getValues().email;
     const password = form.getValues().password;
-    // const collectedGrades = await run(email, password);
-    // const formattedGrades = formatGrades(collectedGrades as StudentGradesType);
-    // dispatch(setStudentGrades(formattedGrades as string));
-    const studentProfile = await run(email, password);
-    dispatch(setStudentProfile(studentProfile as any));
+
+    try {
+      const studentProfile = await run(email, password);
+      dispatch(setStudentProfile(studentProfile as any));
+      form.reset();
+    } catch (error) {
+      console.error("Error fetching student profile:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  function formatGrades(grades: StudentGradesType): string {
-    return Object.entries(grades)
-      .map(([subject, grade]) => `${subject.replace(" - Honors", "")} ${grade}`)
-      .join(" ");
-  }
   return (
     <>
       <Form {...form}>
@@ -67,7 +67,7 @@ export default function StudentForm() {
                 <FormItem>
                   <FormLabel>Student Email Address</FormLabel>
                   <FormControl>
-                    <Input {...field} placeholder="Email" />
+                    <Input {...field} placeholder="Email" disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -83,7 +83,12 @@ export default function StudentForm() {
                 <FormItem>
                   <FormLabel>Student Password</FormLabel>
                   <FormControl>
-                    <Input {...field} type="password" placeholder="Password" />
+                    <Input
+                      {...field}
+                      type="password"
+                      placeholder="Password"
+                      disabled={loading}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -91,7 +96,9 @@ export default function StudentForm() {
             }}
           />
 
-          <Button>Fetch Grades</Button>
+          <Button disabled={loading}>
+            {loading ? "Loading..." : "Fetch Grades"}
+          </Button>
         </form>
       </Form>
     </>
