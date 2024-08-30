@@ -12,7 +12,6 @@ import {
 import { useSelector } from "react-redux";
 
 export default function DisplayGrades() {
-
   const studentProfile = useSelector(
     (state: any) => state.studentProfile.studentProfile // TODO: fix type
   );
@@ -61,6 +60,8 @@ export default function DisplayGrades() {
       }, 2000);
     }
   };
+
+  console.log("studentProfile", studentProfile);
 
   if (!studentProfile) return <></>;
   return (

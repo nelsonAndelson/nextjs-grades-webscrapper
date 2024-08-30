@@ -55,6 +55,7 @@ export async function addToDbAndReturnProfile(
       // TODO: fix types
       firstName,
       lastName,
+      email,
       gradesObject,
     };
 
@@ -82,7 +83,9 @@ export async function addToDbAndReturnProfile(
       }
     );
 
-    return response;
+    // return response;
+    console.log("data", data);
+    return data;
   } catch (error) {
     console.log("Error occured while adding to db" + error);
   }

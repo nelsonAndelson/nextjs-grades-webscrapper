@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import puppeteer, { Page } from "puppeteer";
 
 async function run() {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: "new" });
   const page: Page = await browser.newPage();
 
   try {
@@ -17,7 +17,7 @@ async function run() {
 
 export const GradeScrapeBtn = () => {
   return (
-    <Button 
+    <Button
       className="w-full"
       onClick={() => {
         console.log("hello");

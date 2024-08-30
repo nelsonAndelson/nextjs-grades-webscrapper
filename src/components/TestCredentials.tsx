@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 
 const TestCredentials = () => {
   return (
-    <Card className="min-w-[350px]">
+    <Card className="min-w-[350px] hidden">
       <CardHeader>
         <CardTitle>Test Credentials</CardTitle>
       </CardHeader>

@@ -10,7 +10,7 @@ import { addToDbAndReturnProfile } from "../utils/mongodbUtils/mongodbUtils";
 //S25925ss
 
 export async function run(email: string, password: string) {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: "new" });
   const page: Page = await browser.newPage();
   const parts: string[] = email.split("@")[0].split(".");
   const firstName: string = parts[0];

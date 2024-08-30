@@ -34,6 +34,8 @@ export async function collectGrades(page) {
       return titles;
     });
 
+    console.log("courseTitles", courseTitles);
+
     // Filter out undefined values and get only the text content of elements with class "awarded-grade"
     const filteredCourseTitles = courseTitles.filter((title) => title !== null);
 
