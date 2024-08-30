@@ -28,8 +28,6 @@ export default function DisplayGrades() {
   }
 
   function formatGrades(grades: any): string {
-    //Todo: fix type
-
     return Object.entries(grades)
       .map(([subject, grade]) => `${subject.replace(" - Honors", "")} ${grade}`)
       .join(" ");
