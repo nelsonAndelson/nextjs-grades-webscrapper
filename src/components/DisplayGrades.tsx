@@ -10,6 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { useSelector } from "react-redux";
+import Link from "next/link";
 
 export default function DisplayGrades() {
   const studentProfile = useSelector(
@@ -74,7 +75,9 @@ export default function DisplayGrades() {
         </section>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline">Add to spreadsheet</Button>
+        <Link href="/student-profiles">
+          <Button variant="outline">View all students</Button>
+        </Link>
         <Button
           onClick={() => handleCopy(formattedGrades)}
           disabled={isCopying || hasCopied}
