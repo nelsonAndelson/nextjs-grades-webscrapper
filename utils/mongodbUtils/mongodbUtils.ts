@@ -1,5 +1,7 @@
+import { StudentProfileType } from "@/types/types";
 import { Db, MongoClient, WithId } from "mongodb";
 import { date } from "zod";
+import { getGradesAverage } from "../studentGradesUtils";
 
 const uri: string = process.env.MONGODB_URI;
 const dbName: string = "student-grades";
@@ -88,5 +90,34 @@ export async function addToDbAndReturnProfile(
     return data;
   } catch (error) {
     console.log("Error occured while adding to db" + error);
+  }
+}
+
+export async function getStudentProfiles(): Promise<
+  WithId<StudentProfileType>[]
+> {
+  try {
+    const result = await connnectToDatabase();
+    if (!result) {
+      throw new Error("Could not connect to DB");
+    }
+    const { db } = result;
+
+    const response = await db.collection(dbName).find().toArray();
+    const formattedResponse = response.map((doc) => ({
+      ...doc,
+      _id: doc._id.toString(),
+      firstName: doc.firstName.charAt(0).toUpperCase() + doc.firstName.slice(1),
+      lastName: doc.lastName.charAt(0).toUpperCase() + doc.lastName.slice(1),
+      email: doc.email,
+      gradesObject: doc.gradesObject,
+      dateAdded: doc.dateAdded,
+      gradesAverage: getGradesAverage(doc.gradesObject) || undefined,
+    }));
+
+    return formattedResponse;
+  } catch (error) {
+    console.error(error);
+    return [];
   }
 }

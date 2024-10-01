@@ -4,8 +4,8 @@ type StudentProfileType = {
   lastName: string;
   email: string;
   gradesObject: GradesObjectType;
-  dateAdded: string;
-  gradesAverage?: number | undefined;
+  dateAdded?: string;
+  gradesAverage: number | undefined;
 };
 
 interface GradesObjectType {

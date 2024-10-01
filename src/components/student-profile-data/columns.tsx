@@ -2,7 +2,7 @@
 import { GradesObjectType, StudentProfileType } from "@/types/types";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,10 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { formatGrades, getGradesAverage } from "../../../utils/studentGrades";
-
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+import { formatGrades } from "../../../utils/studentGradesUtils";
 
 export const columns: ColumnDef<StudentProfileType>[] = [
   {
@@ -57,7 +54,24 @@ export const columns: ColumnDef<StudentProfileType>[] = [
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: () => <div className="flex flex-row justify-center">Email</div>,
+    cell: ({ getValue }) => {
+      const email = getValue() as string;
+      return <div className="flex flex-row justify-center ">{email}</div>;
+    },
+  },
+  {
+    accessorKey: "dateAdded",
+    header: "Date Created",
+    cell: ({ getValue }) => {
+      const date = getValue() as string;
+      const formattedDate = date && new Date(date).toLocaleDateString();
+      return (
+        <div className="flex flex-row justify-center">
+          {formattedDate || ""}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "gradesObject",
@@ -78,7 +92,17 @@ export const columns: ColumnDef<StudentProfileType>[] = [
   },
   {
     accessorKey: "gradesAverage",
-    header: () => <div className="flex flex-row justify-center">Average</div>,
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Average
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ getValue }) => {
       const average = getValue() as number;
       return <div className="flex flex-row justify-center">{average}</div>;

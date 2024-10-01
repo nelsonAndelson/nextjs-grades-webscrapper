@@ -1,3 +1,5 @@
+import { parse } from "path";
+
 function formatGrades(grades: any): string {
   return Object.entries(grades)
     .map(([subject, grade]) => `${subject.replace(" - Honors", "")} ${grade}`)
@@ -9,7 +11,8 @@ function getGradesAverage(gradesObject: { [key: string]: string }): number {
     parseFloat(grade.replace("%", ""))
   );
   const total = grades.reduce((acc, grade) => acc + grade, 0);
-  return total / grades.length;
+  const average = total / grades.length;
+  return parseFloat(average.toFixed(1));
 }
 
 export { formatGrades, getGradesAverage };

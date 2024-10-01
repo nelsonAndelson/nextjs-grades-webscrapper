@@ -1,5 +1,5 @@
 import StudentProfilesTable from "@/components/student-profile-data/StudentProfilesTable";
-import React from "react";
+import { getStudentProfiles } from "../../../utils/mongodbUtils/mongodbUtils";
 
 const Page = () => {
   return <StudentProfilesTable />;

@@ -1,5 +1,5 @@
 import { StudentProfileType } from "@/types/types";
-import { getGradesAverage } from "../utils/studentGrades";
+import { getGradesAverage } from "../utils/studentGradesUtils";
 
 const studentProfiles: StudentProfileType[] = [
   {
