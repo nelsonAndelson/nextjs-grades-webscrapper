@@ -13,7 +13,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { run } from "../../actions/collect-grades";
+import LiveBrowser from "./LiveBrowser";
+import type { ScrapeEvent } from "@/app/api/scrape/route";
 import { useDispatch } from "react-redux";
 import { setStudentProfile } from "@/redux/slices/studentProfileSlice";
 import { useState } from "react";
@@ -34,28 +35,65 @@ export default function StudentForm() {
 
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [frame, setFrame] = useState<string | null>(null);
+  const [url, setUrl] = useState("");
+  const [steps, setSteps] = useState<string[]>([]);
+
+  const handleEvent = (event: ScrapeEvent) => {
+    if (event.type === "frame") setFrame(event.data);
+    else if (event.type === "url") setUrl(event.url);
+    else if (event.type === "step") setSteps((prev) => [...prev, event.text]);
+    else if (event.type === "error") setError(event.message);
+    else if (event.type === "result") {
+      dispatch(setStudentProfile(event.profile as any));
+      form.reset();
+    }
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
-    const email = form.getValues().email;
-    const password = form.getValues().password;
+    setError(null);
+    setSteps([]);
+    setFrame(null);
+    setUrl("");
 
     try {
-      const studentProfile = await run(email, password);
-      dispatch(setStudentProfile(studentProfile as any));
-      form.reset();
+      const response = await fetch("/api/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form.getValues()),
+      });
+      if (!response.ok || !response.body) {
+        throw new Error(`Request failed (${response.status})`);
+      }
+
+      // Read the NDJSON stream: each complete line is one event.
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? ""; // keep any half-received line
+        for (const line of lines) {
+          if (line.trim()) handleEvent(JSON.parse(line));
+        }
+      }
     } catch (error) {
       console.error("Error fetching student profile:", error);
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
+    <div className="flex w-full flex-col items-center gap-8 lg:flex-row lg:items-start lg:justify-center">
       <Form {...form}>
         <form
-          action={run} /* TODO: fix type */
           onSubmit={form.handleSubmit(handleSubmit)}
           className="max-w-md w-full flex flex-col gap-4 "
         >
@@ -96,11 +134,14 @@ export default function StudentForm() {
             }}
           />
 
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
           <Button disabled={loading}>
-            {loading ? "Loading..." : "Fetch Grades"}
+            {loading ? "Scraping portal..." : "Fetch Grades"}
           </Button>
         </form>
       </Form>
-    </>
+      <LiveBrowser frame={frame} url={url} steps={steps} running={loading} />
+    </div>
   );
 }

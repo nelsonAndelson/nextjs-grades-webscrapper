@@ -1,23 +1,13 @@
 import { columns } from "./columns";
-import { StudentProfileType } from "@/types/types";
 import { DataTable } from "./DataTable";
-import { studentProfiles as data } from "../../../data/studentProfiles";
-import { getStudentProfiles } from "../../../utils/mongodbUtils/mongodbUtils";
+import { getStudentProfiles } from "../../../utils/db";
 
-// async function getData(): Promise<StudentProfileType[]> {
-//   // Fetch data from your API here.
-//   const stundentProfiles = await getStudentProfiles();
-//   return stundentProfiles;
-// }
+export default async function StudentProfilesTable() {
+  const studentProfiles = await getStudentProfiles();
 
-export default async function DemoPage() {
-  const stundentProfiles = await getStudentProfiles();
-
-  console.log("stundentProfiles", stundentProfiles);
-  //   const data = await getData();
   return (
     <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={stundentProfiles} />
+      <DataTable columns={columns} data={studentProfiles} />
     </div>
   );
 }

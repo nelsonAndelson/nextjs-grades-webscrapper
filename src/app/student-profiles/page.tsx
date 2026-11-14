@@ -1,5 +1,6 @@
 import StudentProfilesTable from "@/components/student-profile-data/StudentProfilesTable";
-import { getStudentProfiles } from "../../../utils/mongodbUtils/mongodbUtils";
+
+export const dynamic = "force-dynamic";
 
 const Page = () => {
   return <StudentProfilesTable />;
