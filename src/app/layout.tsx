@@ -4,6 +4,9 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+// Scraping runs a headless browser inside a server action; give it time on Vercel.
+export const maxDuration = 60;
+
 export const metadata: Metadata = {
   title: "Grades Scrapper",
   description: "Grades web scrapper for schoology.",

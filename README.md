@@ -1,40 +1,37 @@
 # Grades Web Scraper
 
-A web application built with Next.js that scrapes grades from Schoology and stores them in a MongoDB database.
+A Next.js app that logs into a student portal with a headless browser (Puppeteer), scrapes the gradebook, and saves each student's grades to Postgres. Saved profiles can be searched, filtered and sorted in a data table.
 
-## Features
+**Live demo:** _add your Vercel URL here_
 
-- Scrapes grades from Schoology using Puppeteer
-- Stores grades in a MongoDB database
-- Allows users to view their grades in a user-friendly interface
+## Try it
 
-# Getting Started
+1. Open the live demo.
+2. Sign in with the test credentials shown on the page (`jordan.rivera@demo-school.edu` / `demo1234`). Any `first.last@demo-school.edu` email works and gets its own set of grades.
+3. The server launches headless Chrome, logs into the demo school portal (`/mock-portal/login`), reads the grades, and stores them.
+4. Click **View all students** to see every scraped profile.
 
-## Prerequisites
+The scraper was originally built against a real district's Clever → Schoology portal. The public demo targets a mock portal served by this same app, which uses the same gradebook markup, so no real student data is involved and the demo keeps working.
 
-- Node.js (version 14 or higher)
-- MongoDB (version 4 or higher)
-- Schoology account credentials
+## Stack
 
-## Installation
+- **Next.js 14** (App Router, Server Actions)
+- **Puppeteer**: full Chrome locally, `puppeteer-core` + `@sparticuz/chromium` on Vercel
+- **Neon** serverless Postgres (scales to zero and wakes automatically on the next query)
+- Redux Toolkit, TanStack Table, shadcn/ui, Tailwind, Zod + React Hook Form
 
-- Clone the repository: git clone https://github.com/your-username/grades-web-scraper.git
-- Install dependencies: npm install
-- Create a .env file with your MongoDB URI and Schoology account credentials
-- Start the development server: ``` npm run dev ```
+## Run locally
 
-## Usage
+```bash
+npm install
+cp .env.example .env.local   # then fill in DATABASE_URL from your Neon project
+npm run db:setup             # creates the table and seed rows
+npm run dev
+```
 
-- Open the app in your web browser: http://localhost:3000
-- Enter your Schoology account credentials to authenticate
-- View your grades in the app interface
+## Deploy (Vercel)
 
-## Contributing
-
-Contributions are welcome! If you'd like to contribute to this project, please fork the repository and submit a pull request.
-
-License
-This project is licensed under the MIT License.
-
-Acknowledgments
-Thanks to the Next.js and MongoDB teams for their awesome frameworks and tools!
+1. Create a free Neon project and copy its pooled connection string.
+2. Import the repo into Vercel and set the `DATABASE_URL` environment variable.
+3. Run `npm run db:setup` once locally against that database.
+4. Optional: set `PORTAL_URL` if the portal should be reached at a different URL than the incoming request host.
