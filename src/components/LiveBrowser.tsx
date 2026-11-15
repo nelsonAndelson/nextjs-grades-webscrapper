@@ -7,9 +7,18 @@ type LiveBrowserProps = {
   url: string;
   steps: string[];
   running: boolean;
+  compact?: boolean; // smaller window + short log, for the swarm grid
+  badge?: { text: string; tone: "success" | "error" }; // shown over the frame when finished
 };
 
-export default function LiveBrowser({ frame, url, steps, running }: LiveBrowserProps) {
+export default function LiveBrowser({
+  frame,
+  url,
+  steps,
+  running,
+  compact = false,
+  badge,
+}: LiveBrowserProps) {
   const logRef = useRef<HTMLOListElement>(null);
 
   useEffect(() => {
@@ -17,7 +26,11 @@ export default function LiveBrowser({ frame, url, steps, running }: LiveBrowserP
   }, [steps]);
 
   return (
-    <div className="w-full max-w-[640px] overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg">
+    <div
+      className={`w-full overflow-hidden rounded-lg border border-gray-300 bg-white shadow-lg ${
+        compact ? "" : "max-w-[640px]"
+      }`}
+    >
       <div className="flex items-center gap-2 border-b border-gray-200 bg-gray-100 px-3 py-2">
         <span className="h-3 w-3 rounded-full bg-red-400" />
         <span className="h-3 w-3 rounded-full bg-yellow-400" />
@@ -42,15 +55,30 @@ export default function LiveBrowser({ frame, url, steps, running }: LiveBrowserP
           />
         ) : (
           <div className="flex h-full items-center justify-center p-6 text-center text-sm text-gray-500">
-            Press <b className="mx-1">Fetch Grades</b> to watch the bot log in and scrape the
-            gradebook live.
+            {compact ? (
+              running ? "Starting…" : "Idle"
+            ) : (
+              <>
+                Press <b className="mx-1">Fetch Grades</b> to watch the bot log in and scrape
+                the gradebook live.
+              </>
+            )}
+          </div>
+        )}
+        {badge && (
+          <div
+            className={`absolute right-2 top-2 rounded-full px-3 py-1 text-xs font-semibold text-white shadow ${
+              badge.tone === "success" ? "bg-green-600" : "bg-red-600"
+            }`}
+          >
+            {badge.text}
           </div>
         )}
       </div>
 
       <ol
         ref={logRef}
-        className="h-28 overflow-y-auto border-t border-gray-200 bg-gray-950 px-3 py-2 font-mono text-xs text-green-400"
+        className={`${compact ? "h-14 text-[10px]" : "h-28 text-xs"} overflow-y-auto border-t border-gray-200 bg-gray-950 px-3 py-2 font-mono text-green-400`}
       >
         {steps.length === 0 ? (
           <li className="text-gray-500">$ waiting…</li>

@@ -14,7 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import LiveBrowser from "./LiveBrowser";
-import type { ScrapeEvent } from "@/app/api/scrape/route";
+import type { ScrapeEvent } from "../../utils/scrapeStudent";
+import { readNdjson } from "@/lib/readNdjson";
 import { useDispatch } from "react-redux";
 import { setStudentProfile } from "@/redux/slices/studentProfileSlice";
 import { useState } from "react";
@@ -64,24 +65,7 @@ export default function StudentForm() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form.getValues()),
       });
-      if (!response.ok || !response.body) {
-        throw new Error(`Request failed (${response.status})`);
-      }
-
-      // Read the NDJSON stream: each complete line is one event.
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = "";
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? ""; // keep any half-received line
-        for (const line of lines) {
-          if (line.trim()) handleEvent(JSON.parse(line));
-        }
-      }
+      await readNdjson(response, handleEvent);
     } catch (error) {
       console.error("Error fetching student profile:", error);
       setError("Something went wrong. Please try again.");
