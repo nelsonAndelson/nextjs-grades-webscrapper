@@ -33,7 +33,7 @@ export async function scrapeStudent(
   const [firstName = "", lastName = ""] = email.split("@")[0].split(".");
   const onStep = (text: string) => emit({ type: "step", text });
 
-  const context = await browser.createIncognitoBrowserContext();
+  const context = await browser.createBrowserContext();
   try {
     const page = await context.newPage();
     await page.setViewport(viewport);
