@@ -7,8 +7,11 @@ export async function launchBrowser(): Promise<Browser> {
     const chromium = (await import("@sparticuz/chromium")).default;
     const puppeteer = await import("puppeteer-core");
     // @sparticuz/chromium ships the "headless shell" build of Chrome.
+    // --single-process crashes Chrome when a page opens in a new browser
+    // context, and every scraper uses its own context, so leave it out.
+    const args = chromium.args.filter((arg) => arg !== "--single-process");
     return puppeteer.launch({
-      args: await puppeteer.defaultArgs({ args: chromium.args, headless: "shell" }),
+      args: await puppeteer.defaultArgs({ args, headless: "shell" }),
       executablePath: await chromium.executablePath(),
       headless: "shell",
     });
