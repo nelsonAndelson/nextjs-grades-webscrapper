@@ -53,6 +53,6 @@
     "puppeteer@21.7.0": true
   },
   "engines": {
-    "node": "20.x"
+    "node": "26.x"
   }
 }
