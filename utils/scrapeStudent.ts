@@ -91,6 +91,11 @@ export function ndjsonResponse<T>(job: (send: (event: T) => void) => Promise<voi
       };
       try {
         await job(send);
+      } catch (error) {
+        // e.g. Chrome failed to launch: log it and tell the client instead of closing silently.
+        console.error("Streaming job failed:", error);
+        const message = error instanceof Error ? error.message : "Something went wrong.";
+        send({ type: "error", message } as T);
       } finally {
         closed = true;
         controller.close();
